@@ -227,7 +227,7 @@ Após receber `AccountingDataExportCompleted`:
 O processamento deverá ser idempotente para suportar reentrega de mensagens e retries.
 
 **8. Sincronização dos períodos contábeis
-
+------------------------------------------
 O MV deverá comunicar ao ASB, por meio do EventBus, alterações no estado dos períodos contábeis mensais.
 
 ### Eventos
