@@ -310,22 +310,32 @@ O MV deverá utilizar o Outbox Pattern para garantir a consistência entre as al
 
 A alteração dos dados e o registro do evento na Outbox deverão ocorrer na mesma transação. A publicação no EventBus será realizada posteriormente, permitindo o reprocessamento de mensagens em caso de falha na comunicação.
 
-MV
- │
- ├── Atualiza dados
- │
- ├── Registra evento na Outbox
- │
- └── COMMIT
-       │
-       ▼
-    Outbox
-       │
-       ▼
-   EventBus
-       │
-       ▼
-      ASB 
+                         MV
+                          │
+                          │ Atualiza dados
+                          ▼
+                    ┌───────────┐
+                    │  Outbox   │
+                    └─────┬─────┘
+                          │
+                          │ Registra evento
+                          ▼
+                       COMMIT
+                          │
+                          ▼
+                    ┌───────────┐
+                    │  Outbox   │
+                    └─────┬─────┘
+                          │
+                          │ Publicação
+                          ▼
+                    ┌───────────┐
+                    │ EventBus  │
+                    └─────┬─────┘
+                          │
+                          │ Evento
+                          ▼
+                         ASB
 
 **12. Princípios**
 ------------------
