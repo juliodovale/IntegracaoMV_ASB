@@ -303,8 +303,31 @@ Os eventos oficiais são:
 
 O nome das classes e seus namespaces fazem parte do contrato e não devem ser alterados sem acordo entre os sistemas.
 
+**11. Garantia de entrega dos eventos
+--------------------------------------
 
-**11. Princípios**
+O MV deverá utilizar o Outbox Pattern para garantir a consistência entre as alterações realizadas no banco de dados e a publicação dos eventos no EventBus.
+
+A alteração dos dados e o registro do evento na Outbox deverão ocorrer na mesma transação. A publicação no EventBus será realizada posteriormente, permitindo o reprocessamento de mensagens em caso de falha na comunicação.
+
+MV
+ │
+ ├── Atualiza dados
+ │
+ ├── Registra evento na Outbox
+ │
+ └── COMMIT
+       │
+       ▼
+    Outbox
+       │
+       ▼
+   EventBus
+       │
+       ▼
+      ASB
+
+**12. Princípios**
 ------------------
 
 1.  **Assíncrono:** o ASB não aguarda o processamento do MV.
