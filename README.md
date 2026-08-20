@@ -283,6 +283,7 @@ Uma nova exportação poderá ser solicitada quando:
 Cada nova exportação deverá gerar um novo `conversationId`.
 
 **10. Contrato e mensageria**
+----------------------------
 
 A comunicação utilizará o MassTransit/EventBus já adotado pela arquitetura.
 
