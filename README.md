@@ -283,18 +283,25 @@ Uma nova exportação poderá ser solicitada quando:
 Cada nova exportação deverá gerar um novo `conversationId`.
 
 **10. Contrato e mensageria**
------------------------------
 
 A comunicação utilizará o MassTransit/EventBus já adotado pela arquitetura.
+
 Não deverá ser criado envelope customizado.
+
 Os eventos oficiais são:
-| **Evento** | **Origem** | **Destino** | **Finalidade** |
-| --- | --- | --- | --- |
-| `AccountingDataExportRequested` | ASB | MV | Solicitar exportação |
-| `AccountingDataExportCompleted` | MV | ASB | Informar arquivo disponível |
-| `AccountingDataExportFailed` | MV | ASB | Informar falha |
-| `AccountingDataChanged` | MV | ASB | Informar alteração posterior dos dados |
-O nome da classe e namespace dos eventos fazem parte do contrato e não devem ser alterados sem acordo entre os sistemas.
+
+| **Evento**                      | **Origem** | **Destino** | **Finalidade**                                          |
+| ------------------------------- | ---------- | ----------- | ------------------------------------------------------- |
+| `AccountingDataExportRequested` | ASB        | MV          | Solicitar exportação                                    |
+| `AccountingDataExportAvailable` | MV         | ASB         | Informar que a exportação está disponível para consulta |
+| `AccountingDataExportFailed`    | MV         | ASB         | Informar falha na exportação                            |
+| `AccountingPeriodCreated`       | MV         | ASB         | Informar criação do período contábil                    |
+| `AccountingPeriodClosed`        | MV         | ASB         | Informar fechamento do período contábil                 |
+| `AccountingPeriodReopened`      | MV         | ASB         | Informar reabertura do período contábil                 |
+| `AccountingPeriodDeleted`       | MV         | ASB         | Informar exclusão do período contábil                   |
+
+O nome das classes e seus namespaces fazem parte do contrato e não devem ser alterados sem acordo entre os sistemas.
+
 
 **11. Princípios**
 ------------------
