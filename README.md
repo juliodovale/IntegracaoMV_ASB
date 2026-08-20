@@ -248,22 +248,15 @@ Tratamento pelo ASB
 
 Ao receber o evento pelo EventBus, o ASB deverá verificar se o período está relacionado a uma sincronização existente e, quando aplicável, atualizar seu estado e os processos de ECD/ECF relacionados.
 
-MV
- │
- │ AccountingPeriodReopened
- ▼
-EventBus
- │
- ▼
-ASB
- │
- ├── Identificar sincronizações que abrangem o período
- │
- ├── Marcar como INCONSISTENTE
- │
- └── Verificar ECD/ECF relacionada
-       │
-       └── Se já gerada/transmitida → marcar como INCONSISTENTE
+AccountingPeriodReopened
+        ↓
+Identificar sincronizações que abrangem o período
+        ↓
+Marcar como INCONSISTENTE
+        ↓
+Verificar ECD/ECF relacionada
+        ↓
+Se já gerada/transmitida → marcar como INCONSISTENTE
 
 O MV apenas comunica a alteração do estado do período pelo EventBus, ficando sob responsabilidade do ASB identificar as sincronizações afetadas.
 
