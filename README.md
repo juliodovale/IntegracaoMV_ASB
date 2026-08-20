@@ -325,7 +325,7 @@ MV
    EventBus
        │
        ▼
-      ASB
+      ASB 
 
 **12. Princípios**
 ------------------
