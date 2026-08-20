@@ -226,40 +226,34 @@ Após receber `AccountingDataExportCompleted`:
     Disponibilizar para ECD/ECF
 O processamento deverá ser idempotente para suportar reentrega de mensagens e retries.
 
-**8. Alteração dos dados após a sincronização**
------------------------------------------------
+** 8. Alteração dos dados após a sincronização
+----------------------------------------------
+Caso dados contábeis já exportados sejam alterados no MV, o MV deverá publicar o evento `AccountingDataChanged`, informando que houve alteração no período afetado.
 
-O MV é a fonte dos dados contábeis. Portanto, alterações realizadas após uma exportação já processada pelo ASB deverão ser comunicadas.
-O MV deverá publicar um evento, por exemplo: `AccountingDataChanged`
+**Evento:** `AccountingDataChanged`
+
 O evento deverá informar:
-*   CNPJ;
-    
-*   período afetado;
-    
-*   identificadores dos registros alterados, quando disponíveis;
-    
-*   tipo da alteração (INSERT, UPDATE ou DELETE);
-    
-*   data/hora da alteração.
-    
+
+* CNPJ;
+* período afetado;
+* data/hora da alteração.
 
 ### Tratamento pelo ASB
 
+```text
+AccountingDataChanged
+        ↓
+Identificar sincronizações que abrangem o período
+        ↓
+Marcar como INCONSISTENTE
+        ↓
+Verificar ECD/ECF relacionada
+        ↓
+Se já gerada/transmitida → marcar como INCONSISTENTE
+```
 
+Uma alteração em um período poderá afetar tanto uma sincronização mensal quanto uma sincronização anual que contenha aquele período.
 
-    AccountingDataChanged
-            ↓
-    Identificar dados sincronizados afetados
-            ↓
-    Marcar sincronização como INCONSISTENTE
-            ↓
-    Verificar ECD/ECF relacionada
-            ↓
-    Se já gerada/transmitida → marcar como INCONSISTENTE
-            ↓
-    Permitir nova sincronização
-Uma alteração mensal poderá afetar tanto uma sincronização mensal quanto uma anual que contenha aquele período.
-A alteração não deverá ser aplicada silenciosamente sobre dados já sincronizados.
 
 **9. Reprocessamento**
 ----------------------
