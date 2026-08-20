@@ -226,28 +226,32 @@ Após receber `AccountingDataExportCompleted`:
     Disponibilizar para ECD/ECF
 O processamento deverá ser idempotente para suportar reentrega de mensagens e retries.
 
-**8. Sincronização dos períodos contábeis.
+** 8. Sincronização dos períodos contábeis
 
 O MV deverá comunicar ao ASB, por meio do EventBus, alterações no estado dos períodos contábeis mensais.
 
-Os eventos previstos são:
+### Eventos
 
-AccountingPeriodCreated — período criado;
-AccountingPeriodClosed — período fechado;
-AccountingPeriodReopened — período reaberto;
-AccountingPeriodDeleted — período excluído.
+* `AccountingPeriodCreated` — período criado;
+* `AccountingPeriodClosed` — período fechado;
+* `AccountingPeriodReopened` — período reaberto;
+* `AccountingPeriodDeleted` — período excluído.
 
-O evento deverá informar:
+### Dados do evento
 
+```json
 {
   "cnpj": "55233019000100",
   "periodo": "2026-07",
   "changedAt": "2026-08-20T14:35:00Z"
 }
-Tratamento pelo ASB
+```
 
-Ao receber o evento pelo EventBus, o ASB deverá verificar se o período está relacionado a uma sincronização existente e, quando aplicável, atualizar seu estado e os processos de ECD/ECF relacionados.
+### Tratamento pelo ASB
 
+Ao receber o evento, o ASB deverá identificar as sincronizações que abrangem o período informado e, quando aplicável, atualizar seu estado e os processos de ECD/ECF relacionados.
+
+```text
 AccountingPeriodReopened
         ↓
 Identificar sincronizações que abrangem o período
@@ -257,8 +261,9 @@ Marcar como INCONSISTENTE
 Verificar ECD/ECF relacionada
         ↓
 Se já gerada/transmitida → marcar como INCONSISTENTE
+```
 
-O MV apenas comunica a alteração do estado do período pelo EventBus, ficando sob responsabilidade do ASB identificar as sincronizações afetadas.
+O MV é responsável apenas por comunicar a alteração do estado do período. Cabe ao ASB identificar as sincronizações afetadas.
 
 Uma alteração em um período poderá afetar tanto uma sincronização mensal quanto uma sincronização anual que contenha aquele período.
 
